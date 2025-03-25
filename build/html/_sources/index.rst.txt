@@ -17,6 +17,7 @@ documentation for details.
 
    main
    hierarchy
+   howtocreate
 
 Indices and tables
 ==================
