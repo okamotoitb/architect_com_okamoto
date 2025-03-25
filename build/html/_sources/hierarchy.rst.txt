@@ -6,3 +6,7 @@
 ---------------------------------
 .nojekyllファイルを直接レポジトリ上に作成することでテーマの適用が可能になりました。
 あとは、reStructuredTextの書き方を覚えれば完璧です！！
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
