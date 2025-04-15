@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ja" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AmazonSQSの調査 &mdash; okamoto  ドキュメント</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=c033477b"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=4755f45a"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="genindex.html" />
+    <link rel="search" title="検索" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            okamoto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="main.html">はじめてのSphinx</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hierarchy.html">2025/3/25</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtocreate.html">報告ページ更新手順</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">okamoto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AmazonSQSの調査</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/0415.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="amazonsqs">
+<h1>AmazonSQSの調査<a class="headerlink" href="#amazonsqs" title="Link to this heading"></a></h1>
+<section id="id1">
+<h2>キューイングサービスとは<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>Amazon SQSはサービス間をゆるやかに「つなぐ」ことで影響範囲を限定し、開発コストの大幅な削減が期待できるサービスです。</p>
+<dl class="simple">
+<dt>⇒コンポーネント間の&quot;連絡係&quot;になることでシステム全体を疎結合に保つ仕組み</dt><dd><p>連絡の仕方や内容、連絡先によって得意不得意が変わり、AWSだとAmazon SQS以外にもAmazon MQ、Amazon SNSなどのサービスがある。</p>
+</dd>
+</dl>
+<p><a class="reference external" href="https://business.ntt-east.co.jp/content/cloudsolution/column-135.html">https://business.ntt-east.co.jp/content/cloudsolution/column-135.html</a></p>
+</section>
+</section>
+<section id="aws">
+<h1>AWSにおけるキューイングサービスの使い分け<a class="headerlink" href="#aws" title="Link to this heading"></a></h1>
+<dl class="simple">
+<dt>1.ストリーミング方式/メッセージング方式</dt><dd><dl class="simple">
+<dt>・ストリーミング方式：連続的にデータを送る方式。データ間に順序性等の意味があり、まとめて処理する方式</dt><dd><p>⇒IoTのデータ等、連続してデータを送るケース
+⇒動画/音声データを連携するケース</p>
+</dd>
+<dt>・メッセージング方式：メッセージ間に連続性等の意味をもたせず単体で処理をする方式</dt><dd><p>⇒単発で完結する要求や応答をやり取りするケース</p>
+</dd>
+</dl>
+</dd>
+<dt>2.同期/非同期方式</dt><dd><dl class="simple">
+<dt>・同期：リクエスタがプロバイダの処理完了までの応答を待つ方式</dt><dd><p>⇒プロバイダの処理完了が必須なケース
+⇒プロバイダの処理が軽く応答が比較的速いケース</p>
+</dd>
+<dt>・非同期：リクエスタが処理完了の応答を待たずに後続の処理を実施する方式</dt><dd><p>⇒プロバイダ側の処理完了を必須としないケース
+⇒プロバイダ側の処理が重く応答が比較的遅いケース
+⇒リクエスタ側のスループットを上げたいケース</p>
+</dd>
+</dl>
+</dd>
+<dt>3.Push/Pull方式</dt><dd><dl class="simple">
+<dt>・Push：プロデューサがメッセージを送信するとコンシューマに届く方式</dt><dd><p>⇒プロデューサの任意のタイミングで「送信」しコンシューマに届けたいケース</p>
+</dd>
+<dt>・Pull：コンシューマがメッセージを要求することで受領する方式</dt><dd><p>⇒コンシューマの任意のタイミングで「受信」したいケース</p>
+</dd>
+</dl>
+</dd>
+<dt>4.P2P/ Publish Subscribe方式</dt><dd><dl class="simple">
+<dt>・P2P：プロデューサとコンシューマが1対1で連携する方式</dt><dd><p>⇒リクエストの依頼先が1か所の場合</p>
+</dd>
+<dt>・Publish Subscribe：1つのメッセージを複数のコンシューマが受信する方式</dt><dd><p>⇒１つのリクエストで複数の処理を並列で実施したい場合</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">注釈</p>
+<ul class="simple">
+<li><p>リクエスタ/プロバイダ
+⇒リクエスタは特定のリソースやサービスを要求するエンティティであり、プロバイダはそれに応答するエンティティ（クライアント/サーバなど）</p></li>
+<li><p>プロデューサ/コンシューマ
+⇒プロデューサはキューにメッセージを生成して送信するエンティティであり、コンシューマはキューからメッセージを受け取って処理するエンティティ（ログ生成アプリケーション/処理アプリケーション）</p></li>
+<li><p>パブリッシャ/サブスクライバ
+⇒パブリッシャは特定のトピックに対してメッセージを発信するエンティティであり、サブスクライバは特定のトピックに対してパブリッシャからメッセージを受信するエンティティ</p></li>
+</ul>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Queuing Service</p></th>
+<th class="head"><p>1.ストリーミング方式/
+メッセージング方式</p></th>
+<th class="head"><p>同期/非同期方式</p></th>
+<th class="head"><p>Push/Pull方式</p></th>
+<th class="head"><p>P2P/ Publish Subscribe方式</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Amazon SQS</p></td>
+<td><p>メッセージング方式</p></td>
+<td><p>非同期</p></td>
+<td><p>PULL</p></td>
+<td><p>P2P</p></td>
+</tr>
+<tr class="row-odd"><td><p>Amazon MQ</p></td>
+<td><p>メッセージング方式</p></td>
+<td><p>非同期</p></td>
+<td><p>PULL</p></td>
+<td><p>P2P/ Publish Subscribe</p></td>
+</tr>
+<tr class="row-even"><td><p>Amazon SNS</p></td>
+<td><p>メッセージング方式</p></td>
+<td><p>非同期</p></td>
+<td><p>PUSH</p></td>
+<td><p>Publish Subscribe</p></td>
+</tr>
+</tbody>
+</table>
+<p><a class="reference external" href="https://d1.awsstatic.com/webinars/jp/pdf/services/20190717_AWS-BlackBelt_AmazonSQS.pdf">https://d1.awsstatic.com/webinars/jp/pdf/services/20190717_AWS-BlackBelt_AmazonSQS.pdf</a></p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, okamoto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
