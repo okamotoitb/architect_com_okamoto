@@ -7,16 +7,17 @@
 
 | rstファイルを作成する。
 | 書き方は調べながら
-| ~~~\architect_com_okamoto\architect_com_okamoto\sourceに配置する。
+| ~~~\architect_com_okamoto/architect_com_okamoto/sourceに配置する。
+| indexファイルのtoctreeも更新する。
 
 ---------------------------------
 手順2　make html
 ---------------------------------
 
-| minicondaを開き、~~~\architect_com_okamoto\architect_com_okamotoに移動する。
+| minicondaを開き、~~~/architect_com_okamoto/architect_com_okamotoに移動する。
 | make htmlコマンドを実行する。
-| build\html配下にhtmlファイルが作成される。
-| build\html\_sources配下に.rst.txtファイルが作成される。
+| build/html配下にhtmlファイルが作成される。
+| build/html/_sources配下に.rst.txtファイルが作成される。
 
 ---------------------------------
 手順3　Gitへのアップロード
